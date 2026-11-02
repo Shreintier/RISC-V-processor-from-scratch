@@ -1,0 +1,5 @@
+# Compiled simulation outputs
+sim/*.vvp
+
+# Generated waveform files
+waves/*.vcd

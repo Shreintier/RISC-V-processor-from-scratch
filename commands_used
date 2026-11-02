@@ -1,0 +1,12 @@
+sudo apt update
+sudo apt install iverilog gtkwave git
+iverilog -V
+vvp -V
+gtkwave --version
+git --version
+mkdir -p ~/riscv-project/{rtl,tb,programs,sim,waves,docs} //OPTIONAL
+cd ~/riscv-project
+iverilog -g2012 -o sim/and_gate.vvp rtl/and_gate.v tb/tb_and_gate.v
+vvp sim/and_gate.vvp
+gtkwave waves/and_gate.vcd
+
