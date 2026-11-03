@@ -9,4 +9,68 @@ cd ~/riscv-project
 iverilog -g2012 -o sim/and_gate.vvp rtl/and_gate.v tb/tb_and_gate.v
 vvp sim/and_gate.vvp
 gtkwave waves/and_gate.vcd
+------------------------------------------------------------------------------
 
+### Open the project
+
+```bash
+cd "/mnt/c/Users/SAI SRIKAR GOUD/Downloads/riscv-processor"
+```
+
+### Check status and changes
+
+```bash
+git status
+git diff
+git diff --staged
+```
+
+### Save changes and upload them
+
+```bash
+git add .
+git status
+git commit -m "Describe your changes"
+git push
+```
+
+### View history and repository settings
+
+```bash
+git log --oneline
+git remote -v
+git branch
+git ls-files
+```
+
+### Synchronize changes from GitHub
+
+```bash
+git pull
+```
+
+### Stage a specific file
+
+```bash
+git add rtl/register_file.v
+```
+
+### Remove a tracked file
+
+```bash
+git rm filename
+git commit -m "Remove obsolete file"
+git push
+```
+
+**Best practice:** Test your Verilog modules and testbenches before committing completed changes.
+
+-------------------------------------------------------------------------------
+Whenever you make changes to your Verilog files, use:
+    git add .
+    git commit -m "Describe your changes"
+    git push
+For example, after implementing your next processor module:
+    git add rtl/alu.v tb/tb_alu.v
+    git commit -m "Improve ALU implementation and tests"
+    git push
