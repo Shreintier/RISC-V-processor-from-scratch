@@ -1,11 +1,16 @@
-module alu(input [31:0] a,b,input [2:0] op,output reg [31:0] y);
+module alu(input [31:0] a,b,input [3:0] op,output reg [31:0] y);
     always @(*) begin
         case(op)
-            3'b000: y = a + b;  // add
-            3'b001: y = a - b;  // sub
-            3'b010: y = a & b;  // bitwise AND
-            3'b011: y = a | b;  // bitwise OR
-            3'b100: y = a ^ b;  // bitwise XOR
+            4'b0000: y = a + b;                  // ADD
+            4'b0001: y = a - b;                  // SUB
+            4'b0010: y = a & b;                  // AND
+            4'b0011: y = a | b;                  // OR
+            4'b0100: y = a ^ b;                  // XOR
+            4'b0101: y = a << b[4:0];            // SLL
+            4'b0110: y = a >> b[4:0];            // SRL
+            4'b0111: y = $signed(a) >>> b[4:0];  // SRA
+            4'b1000: y = ($signed(a) < $signed(b)) ? 32'd1 : 32'd0; // SLT
+            4'b1001: y = (a < b) ? 32'd1 : 32'd0; // SLTU
             default: y = 32'b0;
         endcase
     end

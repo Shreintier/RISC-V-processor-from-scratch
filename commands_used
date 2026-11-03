@@ -66,11 +66,19 @@ git push
 **Best practice:** Test your Verilog modules and testbenches before committing completed changes.
 
 -------------------------------------------------------------------------------
+
+Before starting work:
+git pull --rebase origin main
 Whenever you make changes to your Verilog files, use:
+    git status
     git add .
     git commit -m "Describe your changes"
     git push
 For example, after implementing your next processor module:
     git add rtl/alu.v tb/tb_alu.v
     git commit -m "Improve ALU implementation and tests"
+    git pull --rebase origin main
     git push
+
+My recommendation: For our RISC-V project, we'll follow this simple rule:
+Pull → Code → Test → Commit → Push
