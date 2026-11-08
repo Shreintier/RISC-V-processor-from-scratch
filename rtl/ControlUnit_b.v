@@ -1,24 +1,20 @@
-//////////////////////////////////////////////////////////////////////////////////
-// Module Name: control_b
-// Description: ALU Control Unit. Exclusively decodes the high-level alu_op from 
-//              Control A, along with funct3 and funct7_5, to generate the 4-bit 
-//              operational control signal for the ALU.
-//////////////////////////////////////////////////////////////////////////////////
+
+// Description: ALU Control Unit. decodes  alu_op from Control A, along with funct3 and funct7_5, to generate the 4-bit control signal for the ALU.
 
 module control_b (
-    input [1:0] alu_op,         // High-level operation specifier from Main Control
+    input [1:0] alu_op,         // operation specifier from Main Control
     input [2:0] funct3,         // Instruction funct3 field (inst[14:12])
     input funct7_5,             // Bit 30 of the instruction (inst[30])
 
-    output reg [3:0] alu_control // 4-bit operational code routed directly to the ALU
+    output reg [3:0] alu_control // 4-bit code to the ALU
 );
 
     always @(*) begin
-        // Default fallback to ADD operation
+         //default
         alu_control = 4'b0000; 
 
         case (alu_op)
-            // ALUOp = 2'b00: Force ADD for loads, stores, AUIPC, LUI, and JALR base address calculation
+            // ALUOp = 2'b00:  ADD for loads, stores, AUIPC, LUI, and JALR base address calculation
             2'b00: alu_control = 4'b0000; 
 
             // ALUOp = 2'b01: Force SUB for conditional branch comparisons (rs1 - rs2)
@@ -35,7 +31,7 @@ module control_b (
                     3'b101: alu_control = funct7_5 ? 4'b0111 : 4'b0110; // SRA (if bit30=1) or SRL (if bit30=0)
                     3'b110: alu_control = 4'b0011;                      // OR (Bitwise Logical OR)
                     3'b111: alu_control = 4'b0010;                      // AND (Bitwise Logical AND)
-                    default: alu_control = 4'b0000;                     // Safe fallback to ADD
+                    default: alu_control = 4'b0000;                    
                 endcase
             end
 
