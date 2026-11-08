@@ -12,36 +12,59 @@ module tb_imm_gen;
         .imm(imm)
     );
 
+    task check_imm;
+    input [31:0] expected;
+        begin
+        if (imm !== expected) begin
+                $display("FAILED: Expected = 0x%h, Got = 0x%h",
+                     expected, imm);
+                $fatal(1);
+            end
+            else begin
+                $display("PASSED: Immediate = 0x%h", imm);
+            end
+        end
+    endtask
+
     initial begin
         $display("--- Starting RISC-V Imm Gen Testbench ---");
         
+        $dumpfile("waves/imm_gen.vcd");
+        $dumpvars(0, tb_imm_gen);
+
         // Passing only simple, pre-computed signal nets to $monitor
         $monitor("Time: %0t | Inst = 0x%h | Opcode = 7'b%b | Imm = 0x%h (Dec: %0d)", 
                  $time, inst, opcode, imm, signed_imm);
 
-        // 1. I-type Test: addi x5, x5, -10
-        inst = 32'h9f508293;
+        // Test 1
+        inst = 32'hff628293;
         #10;
+        check_imm(32'hFFFFFFF6);
 
-        // 2. S-type Test: sw x6, 40(x5)
+        // Test 2
         inst = 32'h0262a423;
         #10;
+        check_imm(32'h00000028);
 
-        // 3. B-type Test: beq x5, x6, -16
+        // Test 3
         inst = 32'hfe6288e3;
         #10;
+        check_imm(32'hFFFFFFF0);
 
-        // 4. U-type Test: lui x5, 0x12345
+        // Test 4
         inst = 32'h123452b7;
         #10;
+        check_imm(32'h12345000);
 
-        // 5. J-type Test: jal x1, +2048 (offset = 0x800)
+        // Test 5
         inst = 32'h800000ef;
         #10;
+        check_imm(32'h00000800);
 
-        // 6. Default / Unknown Opcode Test: r-type (add x5, x5, x5)
+        // Test 6
         inst = 32'h005282b3;
         #10;
+        check_imm(32'h00000000);
 
         $display("--- Testbench Completed ---");
         $finish;
