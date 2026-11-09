@@ -14,6 +14,10 @@ module tb_instruction_memory();
     );
 
     initial begin
+
+        $dumpfile("waves/instruction_memory.vcd");
+        $dumpvars(0,tb_instruction_memory);
+
         // Initialize Inputs
         addr = 0;
 
