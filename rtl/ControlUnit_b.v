@@ -1,19 +1,13 @@
+// ALU Control Unit.Decodes  alu_op from control a, along with funct3 and funct7_5, to generate the 4-bit control signal for the ALU.
 
-// Description: ALU Control Unit. decodes  alu_op from Control A, along with funct3 and funct7_5, to generate the 4-bit control signal for the ALU.
-
-module control_b (
-    input [1:0] alu_op,         // operation specifier from Main Control
-    input [2:0] funct3,         // Instruction funct3 field (inst[14:12])
-    input funct7_5,             // Bit 30 of the instruction (inst[30])
-
-    output reg [3:0] alu_control // 4-bit code to the ALU
-);
+module control_b(input [1:0] alu_op,input [2:0] funct3,input funct7_5,
+            output reg [3:0] alu_control);
 
     always @(*) begin
-         //default
+
         alu_control = 4'b0000; 
 
-        case (alu_op)
+        case(alu_op)
             // ALUOp = 2'b00:  ADD for loads, stores, AUIPC, LUI, and JALR base address calculation
             2'b00: alu_control = 4'b0000; 
 
@@ -22,7 +16,7 @@ module control_b (
 
             // ALUOp = 2'b10: R-Type or I-Type arithmetic operations decoded via funct3 & funct7[5]
             2'b10: begin
-                case (funct3)
+                case(funct3)
                     3'b000: alu_control = funct7_5 ? 4'b0001 : 4'b0000; // SUB (if bit30=1) or ADD (if bit30=0)
                     3'b001: alu_control = 4'b0101;                      // SLL (Shift Left Logical)
                     3'b010: alu_control = 4'b1000;                      // SLT (Set Less Than Signed)

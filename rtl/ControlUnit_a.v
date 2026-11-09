@@ -1,10 +1,7 @@
+// Main_control_unit for the processor, which generates high-level control signals.
 
-// Description: Main Control Unit for RISC-V Core. Decodes the opcode to generate general datapath, memory, and high-level ALU control signals.
-
-
-module control_a (
+module control_a(
     input [6:0] opcode,          // Instruction opcode field (inst[6:0])
-
     output reg branch,           // high for conditional branches
     output reg jump,             // high for unconditional jumps (JAL/JALR)
     output reg jalr,             // high ONLY for JALR
@@ -17,8 +14,10 @@ module control_a (
     output reg reg_write         // Register File Write Enable
 );
 
-    always @(*) begin        
-        // Default initializations
+    always @(*) begin   
+
+        //Initializations
+
         branch     = 1'b0;
         jump       = 1'b0;
         jalr       = 1'b0;
@@ -30,73 +29,73 @@ module control_a (
         mem_to_reg = 2'b00;
         alu_op     = 2'b00;  
 
-        case (opcode)
-            // R-TYPE INSTRUCTIONS (ADD, SUB, SLL, SLT, etc.)
+        case(opcode)
+            //R-TYPE INSTRUCTIONS(ADD, SUB, SLL, SLT, etc.)
             7'b0110011: begin
                 reg_write = 1'b1;
-                alu_op    = 2'b10; // R-type arithmetic
+                alu_op = 2'b10; //R-type arithmetic
             end
 
-            // I-TYPE ALU INSTRUCTIONS (ADDI, SLLI, SLTI, etc.)
+            // I-TYPE ALU INSTRUCTIONS(ADDI, SLLI, SLTI, etc.)
             7'b0010011: begin
-                alu_src   = 1'b1;
+                alu_src = 1'b1;
                 reg_write = 1'b1;
-                alu_op    = 2'b10; // I-type arithmetic
+                alu_op = 2'b10; //I-type arithmetic
             end
 
-            // LOAD INSTRUCTIONS (LB, LH, LW, LBU, LHU)
+            // LOAD INSTRUCTIONS(LB, LH, LW, LBU, LHU)
             7'b0000011: begin
-                alu_src    = 1'b1;
+                alu_src = 1'b1;
                 mem_to_reg = 2'b01;
-                reg_write  = 1'b1;
-                mem_read   = 1'b1;
-                alu_op     = 2'b00; // ADD (rs1 + immediate)
+                reg_write = 1'b1;
+                mem_read = 1'b1;
+                alu_op = 2'b00; //ADD(rs1 + immediate)
             end
 
-            // STORE INSTRUCTIONS (SB, SH, SW)
+            // STORE INSTRUCTIONS(SB, SH, SW)
             7'b0100011: begin
-                alu_src    = 1'b1;
-                mem_write  = 1'b1;
-                alu_op     = 2'b00; // ADD (rs1 + immediate)
+                alu_src = 1'b1;
+                mem_write = 1'b1;
+                alu_op = 2'b00; //ADD(rs1 + immediate)
             end
 
-            // BRANCH INSTRUCTIONS (BEQ, BNE, BLT, etc.)
+            // BRANCH INSTRUCTIONS(BEQ, BNE, BLT, etc.)
             7'b1100011: begin
                 branch = 1'b1;
-                alu_op = 2'b01; // Branch evaluation (SUB)
+                alu_op = 2'b01; //Branch evaluation(SUB)
             end
 
-            // JAL INSTRUCTION (Jump and Link)
+            // JAL INSTRUCTION(Jump and Link)
             7'b1101111: begin
-                jump       = 1'b1;
+                jump = 1'b1;
                 reg_write  = 1'b1;
-                mem_to_reg = 2'b10; // Return address PC + 4
+                mem_to_reg = 2'b10; //Return address PC + 4
             end
 
-            // JALR INSTRUCTION (Jump and Link Register)
+            // JALR INSTRUCTION(Jump and Link Register)
             7'b1100111: begin
-                jump       = 1'b1;
-                jalr       = 1'b1;
-                alu_src    = 1'b1;
-                reg_write  = 1'b1;
+                jump = 1'b1;
+                jalr = 1'b1;
+                alu_src = 1'b1;
+                reg_write = 1'b1;
                 mem_to_reg = 2'b10;
-                alu_op     = 2'b00; // ADD (rs1 + immediate)
+                alu_op = 2'b00; //ADD(rs1 + immediate)
             end
 
-            // LUI INSTRUCTION (Load Upper Immediate)
+            // LUI INSTRUCTION(Load Upper Immediate)
             7'b0110111: begin
-                reg_write  = 1'b1;
-                alu_src    = 1'b1;
-                alu_src_a  = 2'b10; // Zero (32'b0)
-                alu_op     = 2'b00; // ADD (0 + immediate)
+                reg_write = 1'b1;
+                alu_src = 1'b1;
+                alu_src_a = 2'b10; //Zero(32'b0)
+                alu_op = 2'b00; //ADD(0 + immediate)
             end
 
-            // AUIPC INSTRUCTION (Add Upper Immediate to PC)
+            // AUIPC INSTRUCTION(Add Upper Immediate to PC)
             7'b0010111: begin
-                reg_write  = 1'b1;
-                alu_src    = 1'b1;
-                alu_src_a  = 2'b01; // PC value
-                alu_op     = 2'b00; // ADD (PC + immediate)
+                reg_write = 1'b1;
+                alu_src = 1'b1;
+                alu_src_a = 2'b01; //PC value
+                alu_op = 2'b00; //ADD(PC + immediate)
             end
 
             default: begin

@@ -1,9 +1,6 @@
-module imm_gen (
-    input [31:0] inst,
-    output reg [31:0] imm
-);
+module imm_gen(input [31:0] inst,output reg [31:0] imm);
     always @(*) begin
-        case (inst[6:0])
+        case(inst[6:0])
             7'b0000011, 7'b0010011, 7'b1100111: // I-type
                 imm = {{20{inst[31]}}, inst[31:20]};
             7'b0100011: // S-type

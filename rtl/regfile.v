@@ -1,7 +1,5 @@
-module regfile( input clk,rst,reg_write, 
-                input [4:0] read_reg1,read_reg2,write_reg,
-                input [31:0] write_data,
-                output [31:0] data_reg1,data_reg2);
+module regfile(input clk,rst,reg_write, input [4:0] read_reg1,read_reg2,write_reg,
+                input [31:0] write_data,output [31:0] data_reg1,data_reg2);
     reg [31:0] registers[0:31];
     integer i;
     always @(posedge clk or posedge rst) begin //Asynchronus reset
