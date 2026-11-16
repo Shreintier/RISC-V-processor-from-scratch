@@ -82,3 +82,20 @@ For example, after implementing your next processor module:
 
 My recommendation: For our RISC-V project, we'll follow this simple rule:
 Pull → Code → Test → Commit → Push
+
+-----------------------------------------------------------------------------
+
+-----For single_cycle module compilation-------
+
+iverilog -g2012 -o sim/single_cycle.vvp \
+rtl/alu.v \
+rtl/regfile.v \
+rtl/imm_gen.v \
+rtl/ControlUnit_a.v \
+rtl/ControlUnit_b.v \
+rtl/instruction_memory.v \
+rtl/data_memory.v \
+rtl/single_cycle_processor.v \
+tb/tb_single_cycle_processor.v
+
+vvp sim/single_cycle.vvp

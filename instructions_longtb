@@ -1,0 +1,115 @@
+3. What each group tests (including the hurdles)
+A. Arithmetic and logical operations
+Address	Instruction	Expected result
+0x00	addi x1,x0,5	x1 = 5
+0x04	addi x2,x0,10	x2 = 10
+0x08	add x3,x1,x2	x3 = 15
+0x0C	sub x4,x2,x1	x4 = 5
+0x10	and x5,x2,x1	x5 = 0
+0x14	or x6,x2,x1	x6 = 15
+0x18	xor x7,x2,x1	x7 = 15
+
+Hurdle tested: Consecutive instructions depend on previously written registers. The processor must read the correct register values after each clock edge.
+B. Signed and unsigned comparisons
+Address	Instruction	Expected result
+0x1C	addi x8,x0,-1	x8 = FFFFFFFF
+0x20	slt x9,x8,x1	x9 = 1
+0x24	sltu x10,x8,x1	x10 = 0
+
+Hurdle tested: The same bit pattern represents -1 when signed, but 4294967295 when unsigned.
+
+This is an important viva question: why do SLT and SLTU produce different results for the same operands?
+C. Shift operations
+Address	Instruction	Expected result
+0x30	sll x13,x11,x12	8
+0x3C	srl x16,x14,x15	08000000
+0x40	sra x17,x14,x15	F8000000
+0x5C	slli x24,x1,2	20
+0x60	srli x25,x14,4	08000000
+0x64	srai x26,x14,4	F8000000
+
+Hurdles tested:
+- Logical versus arithmetic right shift.
+- Sign preservation.
+- Shift amount handling using five bits in RV32.
+D. Immediate and upper-immediate operations
+We test:
+- Negative immediate: addi x18,x1,-8
+- slti and sltiu
+- xori, ori, andi
+- lui x27,0x12345
+- auipc x28,0
+Hurdle tested: Immediate extraction, sign extension and correct U-type immediate placement.
+
+For AUIPC, the expected result is the instruction's own PC, which is 0x6C in this program.
+E. Load and store operations
+This is particularly important because our Data Memory supports byte, halfword and word accesses.
+Instruction	Address	Expected result
+SW	0	Store 15
+LW	0	Load 15
+SB	4	Store 0x80
+LB	4	FFFFFF80
+LBU	4	00000080
+SH	8	Store 0x8001
+LH	8	FFFF8001
+LHU	8	00008001
+SB	5, 6, 7	Test all remaining byte lanes
+LBU	5, 6, 7	Read back 0x55
+SH	10	Write upper halfword of a word
+LH/LHU	10	Read back 0x1234
+
+Hurdles tested:
+- Byte-address to word-index conversion.
+- Correct byte-lane selection.
+- Signed versus unsigned loads.
+- Lower versus upper halfword selection.
+- Persistence of stored data across instructions.
+F. Branch instructions
+We test all six standard conditional branches:
+Instruction	Condition	Expected behaviour
+BEQ	Equal	Taken
+BNE	Not equal	Not taken
+BLT	Signed less than	Taken
+BGE	Signed greater or equal	Taken
+BLTU	Unsigned less than	Not taken
+BGEU	Unsigned greater or equal	Taken
+
+Hurdle tested: A taken branch must update the PC to the target address and skip the intervening instruction. A not-taken branch must continue sequentially.
+
+The instructions that write 99 immediately after several taken branches are deliberate sentinels. They should be skipped. If one executes, the branch handling is incorrect.
+G. Jumps and special register cases
+We also test:
+- JAL: saves PC+4 in the destination register.
+- JALR: obtains the target from a register and clears bit zero.
+- Writing to x0: the attempted write of 123 must be ignored.
+- A final jal x0,0: keeps the processor in a stable loop.
+These tests check control-flow handling and the special behaviour of x0.
+4. Expected results at the end
+The final instruction is:
+jal x0, 0
+
+
+It creates an infinite loop at address 0x138, allowing us to inspect the final processor state.
+
+Expected final values
+Signal / register	Expected value
+PC	00000138
+x3	0000000F
+x4	0000000B
+x7	00008001
+x8	FFFF8001
+x9	0000000C
+x10	00001234
+x11	00000118
+x12	00000055
+x13	0000000D
+x14	0000012C
+x15	00000128
+x17	00000011
+x18	00000001
+x28	0000006C
+x29	0000000F
+x31	FFFFFF80
+mem[0]	0000000F
+mem[1]	55555580
+mem[2]	12348001
