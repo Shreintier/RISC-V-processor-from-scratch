@@ -18,4 +18,4 @@ module regfile(input clk,rst,reg_write, input [4:0] read_reg1,read_reg2,write_re
     assign data_reg1 = registers[read_reg1];
     assign data_reg2 = registers[read_reg2];
     // x0 is always zero according to the procedural logic above, no need for distinction in assigning here
-endmodule; 
+endmodule

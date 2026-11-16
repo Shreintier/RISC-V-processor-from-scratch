@@ -40,7 +40,7 @@ module control_a(
             7'b0010011: begin
                 alu_src = 1'b1;
                 reg_write = 1'b1;
-                alu_op = 2'b10; //I-type arithmetic
+                alu_op = 2'b11; // I-type arithmetic (distinct from R-type 2'b10)
             end
 
             // LOAD INSTRUCTIONS(LB, LH, LW, LBU, LHU)
@@ -97,7 +97,6 @@ module control_a(
                 alu_src_a = 2'b01; //PC value
                 alu_op = 2'b00; //ADD(PC + immediate)
             end
-
             default: begin
             end
         endcase
