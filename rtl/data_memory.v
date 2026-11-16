@@ -1,4 +1,4 @@
-module data_memory (input clk,input mem_read,input mem_write,input [31:0] addr,
+module data_memory(input clk,input mem_read,input mem_write,input [31:0] addr,
             input [31:0] write_data,input [2:0] funct3,output reg [31:0] read_data
 );
 
