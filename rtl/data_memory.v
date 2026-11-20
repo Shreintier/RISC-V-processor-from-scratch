@@ -1,61 +1,80 @@
-module data_memory(input clk,input mem_read,input mem_write,input [31:0] addr,
-            input [31:0] write_data,input [2:0] funct3,output reg [31:0] read_data
+`timescale 1ns / 1ps
+module data_memory #(
+    parameter rl_var = 32,
+    parameter bytes = 4096
+)(
+    input clk,
+    input mem_read,
+    input mem_write,
+    input [rl_var-1:0] addr,
+    input [rl_var-1:0] write_data,
+    input [2:0] funct3,
+    output reg [rl_var-1:0] read_data
 );
-
-    reg [31:0] mem [0:255]; //1024 bytes of storage
-    reg [31:0] shifted_data;
-
-    //Asynchronous read
-    always @(*) begin
-        read_data = 32'b0;
-        shifted_data = 32'b0;
-
-        if(mem_read) begin
-            // Select the addressed word and byte position
-            shifted_data = mem[addr[9:2]] >> (8 * addr[1:0]);
-
+    localparam idx_w = $clog2(bytes);
+    reg [7:0] mem [0:bytes-1];
+    wire [idx_w-1:0] idx = addr[idx_w-1:0];
+    integer i;
+    initial begin
+        for(i = 0; i < bytes; i = i + 1)
+            mem[i] = 8'd0;
+    end
+    always@(posedge clk) begin
+        if(mem_write) begin
             case(funct3)
-                3'b000: // Load signed byte
-                    read_data = {{24{shifted_data[7]}}, shifted_data[7:0]};
-                3'b001: // Load signed halfword
-                    read_data = {{16{shifted_data[15]}}, shifted_data[15:0]};
-                3'b101: // Load unsigned halfword
-                    read_data = {16'b0, shifted_data[15:0]};
-                3'b010: // Load word
-                    read_data = mem[addr[9:2]];
-                3'b100: // Load unsigned byte
-                    read_data = {24'b0, shifted_data[7:0]};
-                default: read_data = 32'b0;
+                3'b000: mem[idx] <= write_data[7:0];
+                3'b001: begin
+                    mem[idx] <= write_data[7:0];
+                    mem[idx+1] <= write_data[15:8];
+                end
+                3'b010: begin
+                    mem[idx] <= write_data[7:0];
+                    mem[idx+1] <= write_data[15:8];
+                    mem[idx+2] <= write_data[23:16];
+                    mem[idx+3] <= write_data[31:24];
+                end
+                default: begin
+                end
             endcase
         end
     end
-
-    //Synchronous write
-    always @(posedge clk) begin
-        if(mem_write) begin
-
-            case (funct3)
-                3'b000: begin //Store byte
-                    case(addr[1:0])
-                        2'b00: mem[addr[9:2]][7:0] <= write_data[7:0];
-                        2'b01: mem[addr[9:2]][15:8] <= write_data[7:0];
-                        2'b10: mem[addr[9:2]][23:16] <= write_data[7:0];
-                        2'b11: mem[addr[9:2]][31:24] <= write_data[7:0];
-                    endcase
+    generate
+        if(rl_var >= 64) begin : wide_store
+            always@(posedge clk) begin
+                if(mem_write && (funct3 == 3'b011)) begin
+                    mem[idx] <= write_data[7:0];
+                    mem[idx+1] <= write_data[15:8];
+                    mem[idx+2] <= write_data[23:16];
+                    mem[idx+3] <= write_data[31:24];
+                    mem[idx+4] <= write_data[39:32];
+                    mem[idx+5] <= write_data[47:40];
+                    mem[idx+6] <= write_data[55:48];
+                    mem[idx+7] <= write_data[63:56];
                 end
-                3'b001: begin //Store halfword
-                    if(addr[1]==1'b0)
-                        mem[addr[9:2]][15:0] <= write_data[15:0];
-                    else
-                        mem[addr[9:2]][31:16] <= write_data[15:0];
-                end
-                3'b010: begin // Store word
-                    mem[addr[9:2]] <= write_data;
-                end
-                default: begin
-                    //No write
-                end
+            end
+        end
+    endgenerate
+    wire [31:0] word_val = {mem[idx+3], mem[idx+2], mem[idx+1], mem[idx]};
+    wire [15:0] half_val = {mem[idx+1], mem[idx]};
+    wire [7:0] byte_val = mem[idx];
+    always@(*) begin
+        if(!mem_read) begin
+            read_data = {rl_var{1'b0}};
+        end else begin
+            case(funct3)
+                3'b000: read_data = {{(rl_var-8){byte_val[7]}}, byte_val};
+                3'b001: read_data = {{(rl_var-16){half_val[15]}}, half_val};
+                3'b010: read_data = {{(rl_var-31){word_val[31]}}, word_val[30:0]};
+                3'b100: read_data = {{(rl_var-8){1'b0}}, byte_val};
+                3'b101: read_data = {{(rl_var-16){1'b0}}, half_val};
+                default: read_data = {rl_var{1'b0}};
             endcase
+            if(rl_var >= 64) begin
+                if(funct3 == 3'b110)
+                    read_data = {{(rl_var-32){1'b0}}, word_val};
+                else if(funct3 == 3'b011)
+                    read_data = {{(rl_var-63){mem[idx+7][7]}}, mem[idx+7][6:0], mem[idx+6], mem[idx+5], mem[idx+4], word_val};
+            end
         end
     end
 endmodule

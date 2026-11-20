@@ -1,56 +1,20 @@
 `timescale 1ns / 1ps
-
-module tb_instruction_memory();
-    // Inputs
+module tb_instruction_memory;
     reg [31:0] addr;
-
-    // Outputs
     wire [31:0] inst;
-
-    // Instantiate the Unit Under Test (UUT)
-    instruction_memory uut (
-        .addr(addr), 
-        .inst(inst)
-    );
-
+    integer err = 0;
+    instruction_memory #(.rl_var(32), .words(16)) dut(.addr(addr), .inst(inst));
     initial begin
-
-        $dumpfile("waves/instruction_memory.vcd");
-        $dumpvars(0,tb_instruction_memory);
-
-        // Initialize Inputs
-        addr = 0;
-
-        #10;
-        
-        // Test Address 0x00000000 
-        addr = 32'h0000_0000;
-        #10;
-        $display("Addr: %h | Inst: %h", addr, inst);
-
-        // Test Address 0x00000004
-        addr = 32'h0000_0004;
-        #10;
-        $display("Addr: %h | Inst: %h", addr, inst);
-
-        // Test Address 0x00000008 
-        addr = 32'h0000_0008;
-        #10;
-        $display("Addr: %h | Inst: %h", addr, inst);
-
-        // Test Address 0x0000000C 
-        addr = 32'h0000_000C;
-        #10;
-        $display("Addr: %h | Inst: %h", addr, inst);
-
-        // Test Address 0x00000010 
-        addr = 32'h0000_0010;
-        #10;
-        $display("Addr: %h | Inst: %h", addr, inst);
-
-
+        dut.mem[0] = 32'h0050_0093;
+        dut.mem[1] = 32'h00a0_0113;
+        addr = 32'd0; #1;
+        if(inst !== 32'h0050_0093) err = err + 1;
+        addr = 32'd4; #1;
+        if(inst !== 32'h00a0_0113) err = err + 1;
+        if(err == 0)
+            $display("pass tb_instruction_memory");
+        else
+            $display("fail tb_instruction_memory (%0d)", err);
         $finish;
     end
-      
 endmodule
-
