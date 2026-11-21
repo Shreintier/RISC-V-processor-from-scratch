@@ -25,6 +25,7 @@ module id_ex_reg #(
     input [4:0] id_rd,
     input [2:0] id_funct3,
     input id_funct7_5,
+    input id_is_m_op,
     output reg ex_branch,
     output reg ex_jump,
     output reg ex_jalr,
@@ -44,9 +45,11 @@ module id_ex_reg #(
     output reg [4:0] ex_rs2,
     output reg [4:0] ex_rd,
     output reg [2:0] ex_funct3,
-    output reg ex_funct7_5
+    output reg ex_funct7_5,
+    output reg ex_is_m_op
 );
-    always@(posedge clk or posedge rst) begin
+    // Clear this stage on a reset, taken branch, or load stall.
+    always @(posedge clk or posedge rst) begin
         if(rst || id_ex_flush) begin
             ex_branch <= 1'b0;
             ex_jump <= 1'b0;
@@ -68,6 +71,7 @@ module id_ex_reg #(
             ex_rd <= 5'd0;
             ex_funct3 <= 3'd0;
             ex_funct7_5 <= 1'b0;
+            ex_is_m_op <= 1'b0;
         end else begin
             ex_branch <= id_branch;
             ex_jump <= id_jump;
@@ -89,6 +93,7 @@ module id_ex_reg #(
             ex_rd <= id_rd;
             ex_funct3 <= id_funct3;
             ex_funct7_5 <= id_funct7_5;
+            ex_is_m_op <= id_is_m_op;
         end
     end
 endmodule

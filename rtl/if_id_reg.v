@@ -13,7 +13,8 @@ module if_id_reg #(
     output reg [rl_var-1:0] id_pc_plus_4,
     output reg [31:0] id_inst
 );
-    always@(posedge clk or posedge rst) begin
+    // Keep the current instruction on a stall and clear it on a flush.
+    always @(posedge clk or posedge rst) begin
         if(rst || if_id_flush) begin
             id_pc <= {rl_var{1'b0}};
             id_pc_plus_4 <= {rl_var{1'b0}};

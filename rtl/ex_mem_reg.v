@@ -23,7 +23,8 @@ module ex_mem_reg #(
     output reg [4:0] mem_rd,
     output reg [2:0] mem_funct3
 );
-    always@(posedge clk or posedge rst) begin
+    // Pass the result and memory controls from EX to MEM.
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             mem_mem_read <= 1'b0;
             mem_mem_to_reg <= 2'b00;

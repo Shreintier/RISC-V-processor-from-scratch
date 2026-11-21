@@ -7,13 +7,15 @@ module alu #(
     input [3:0] op,
     output reg [rl_var-1:0] y
 );
+    // Use only the low bits of b as the shift amount.
     localparam shift = $clog2(rl_var);
-    always@(*) begin
+    // The control code selects the ALU result.
+    always @(*) begin
         case(op)
-            4'b0000: y = a & b;
-            4'b0001: y = a | b;
-            4'b0010: y = a + b;
-            4'b0011: y = a ^ b;
+            4'b0000: y = a & b; // AND
+            4'b0001: y = a | b; // OR
+            4'b0010: y = a + b; // ADD
+            4'b0011: y = a ^ b; // XOR
             4'b0100: y = a << b[shift-1:0];
             4'b0101: y = a >> b[shift-1:0];
             4'b0110: y = a - b;

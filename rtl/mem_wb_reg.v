@@ -17,7 +17,8 @@ module mem_wb_reg #(
     output reg [rl_var-1:0] wb_alu_result,
     output reg [4:0] wb_rd
 );
-    always@(posedge clk or posedge rst) begin
+    // Keep the result and destination register ready for writeback.
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             wb_mem_to_reg <= 2'b00;
             wb_reg_write <= 1'b0;

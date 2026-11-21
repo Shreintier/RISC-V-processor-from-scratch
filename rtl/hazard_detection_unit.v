@@ -11,9 +11,10 @@ module hazard_detection_unit(
     output reg if_id_flush,
     output reg id_ex_flush
 );
+    // Check only the registers this instruction actually reads.
     reg uses_rs1;
     reg uses_rs2;
-    always@(*) begin
+    always @(*) begin
         case(if_id_opcode)
             7'b0110011,
             7'b0100011,
@@ -33,7 +34,8 @@ module hazard_detection_unit(
             end
         endcase
     end
-    always@(*) begin
+    // A taken jump or branch clears the two younger instructions.
+    always @(*) begin
         pc_write = 1'b1;
         if_id_write = 1'b1;
         if_id_flush = 1'b0;

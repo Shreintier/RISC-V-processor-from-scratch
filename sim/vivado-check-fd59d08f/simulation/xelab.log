@@ -1,0 +1,28 @@
+Vivado Simulator v2022.2
+Copyright 1986-1999, 2001-2022 Xilinx, Inc. All Rights Reserved.
+Running: C:/Users/Vivado/2022.2/bin/unwrapped/win64.o/xelab.exe -mt off tb_pipelined_processor -s processor_test 
+Turned off multi-threading.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module work.instruction_memory(addr_var=256)
+Compiling module work.if_id_reg
+Compiling module work.control_a
+Compiling module work.imm_gen
+Compiling module work.regfile
+Compiling module work.hazard_detection_unit
+Compiling module work.id_ex_reg
+Compiling module work.control_b
+Compiling module work.forwarding_unit
+Compiling module work.alu_default
+Compiling module work.mul_div_unit
+Compiling module work.ex_mem_reg
+Compiling module work.data_memory_default
+Compiling module work.mem_wb_reg
+Compiling module work.pipelined_processor
+Compiling module work.tb_pipelined_processor
+ERROR: [XSIM 43-3409] Failed to compile generated C file xsim.dir/processor_test/obj/xsim_1.c.
+ERROR: [XSIM 43-3915] Encountered a fatal error. Cannot continue. Exiting... 

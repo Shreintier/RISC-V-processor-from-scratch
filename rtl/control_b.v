@@ -5,7 +5,8 @@ module control_b(
     input funct7_5,
     output reg [3:0] alu_control
 );
-    always@(*) begin
+    // Use funct3 and bit 30 to pick the ALU operation.
+    always @(*) begin
         case(alu_op)
             2'b00: alu_control = 4'b0010;
             2'b01: alu_control = 4'b0110;

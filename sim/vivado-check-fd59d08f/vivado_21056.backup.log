@@ -1,0 +1,29 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Sat Nov 21 14:05:42 2026
+# Process ID: 21056
+# Current directory: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f
+# Command line: vivado.exe -mode batch -source C:\Users\SAI SRIKAR GOUD\Downloads\riscv-processor\fpga\build.tcl -tclargs C:\Users\SAI SRIKAR GOUD\Downloads\riscv-processor\sim\vivado-check-fd59d08f\project
+# Log file: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f/vivado.log
+# Journal file: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f\vivado.jou
+# Running On: LAPTOP-CBC5TE99, OS: Windows, CPU Frequency: 2803 MHz, CPU Physical cores: 14, Host memory: 25463 MB
+#-----------------------------------------------------------
+CRITICAL WARNING: [Common 17-741] No write access right to the local Tcl store at 'C'. XilinxTclStore is reverted to the installation area. If you want to use local Tcl Store, please change the access right and relaunch Vivado.
+source {C:\Users\SAI SRIKAR GOUD\Downloads\riscv-processor\fpga\build.tcl}
+# set source_dir [file normalize [file dirname [info script]]]
+# set repo_dir [file dirname $source_dir]
+# set output_dir [file normalize [lindex $argv 0]]
+# if {$argc != 1} {
+#     error "Usage: vivado -mode batch -source fpga/build.tcl -tclargs <output-directory>"
+# }
+# create_project riscv_boolean $output_dir -part xc7s50csga324-1
+INFO: [ProjectBase 1-489] The host OS only allows 260 characters in a normal path. The project is stored in a path with more than 80 characters. If you experience issues with IP, Block Designs, or files not being found, please consider moving the project to a location with a shorter path. Alternately consider using the OS subst command to map part of the path to a drive letter.
+Current project path is 'C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f/project'
+create_project: Time (s): cpu = 00:00:03 ; elapsed = 00:00:13 . Memory (MB): peak = 377.457 ; gain = 63.621
+# add_files -norecurse [lsort [glob [file join $repo_dir rtl *.v]]]
+# add_files -norecurse [list [file join $source_dir fpga.v] [file join $repo_dir program.mem]]
+# add_files -fileset constrs_1 -norecurse [file join $source_dir boolean.xdc]
+ERROR: [Vivado 12-172] File or Directory 'SRIKAR' does not exist
+INFO: [Common 17-206] Exiting Vivado at Sat Nov 21 14:05:57 2026...

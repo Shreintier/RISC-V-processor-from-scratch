@@ -1,5 +1,7 @@
 # Compiled simulation outputs
 sim/*.vvp
+sim/final_processor/
+sim/final_processor_rv64i/
 
 # Generated waveform files
 waves/*.vcd

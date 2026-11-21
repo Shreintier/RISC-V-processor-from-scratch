@@ -1,0 +1,13 @@
+#-----------------------------------------------------------
+# Vivado v2022.2 (64-bit)
+# SW Build 3671981 on Fri Oct 14 05:00:03 MDT 2022
+# IP Build 3669848 on Fri Oct 14 08:30:02 MDT 2022
+# Start of session at: Sat Nov 21 14:09:02 2026
+# Process ID: 31620
+# Current directory: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f
+# Command line: vivado.exe -mode batch -source C:\Users\SAI SRIKAR GOUD\Downloads\riscv-processor\fpga\build.tcl -tclargs image
+# Log file: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f/vivado.log
+# Journal file: C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/sim/vivado-check-fd59d08f\vivado.jou
+# Running On: LAPTOP-CBC5TE99, OS: Windows, CPU Frequency: 2803 MHz, CPU Physical cores: 14, Host memory: 25463 MB
+#-----------------------------------------------------------
+source {C:\Users\SAI SRIKAR GOUD\Downloads\riscv-processor\fpga\build.tcl}

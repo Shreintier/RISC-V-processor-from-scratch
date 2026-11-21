@@ -1,0 +1,5 @@
+set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33} [get_ports clk]
+create_clock -name board_clk -period 10.000 [get_ports clk]
+set_property -dict {PACKAGE_PIN G1 IOSTANDARD LVCMOS33} [get_ports led]
+set_property CFGBVS VCCO [current_design]
+set_property CONFIG_VOLTAGE 3.3 [current_design]

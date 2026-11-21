@@ -5,7 +5,8 @@ module imm_gen #(
     input [31:0] inst,
     output reg [rl_var-1:0] imm
 );
-    always@(*) begin
+    // Put the immediate bits together and extend the sign bit.
+    always @(*) begin
         case(inst[6:0])
             7'b0010011,
             7'b0000011,

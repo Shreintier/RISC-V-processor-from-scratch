@@ -1,0 +1,5 @@
+set_property SRC_FILE_INFO {cfile:{C:/Users/SAI SRIKAR GOUD/Downloads/riscv-processor/fpga/led_blink/led_blink.xdc} rfile:../../../../fpga/led_blink/led_blink.xdc id:1} [current_design]
+set_property src_info {type:XDC file:1 line:1 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33} [get_ports clk]
+set_property src_info {type:XDC file:1 line:3 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict {PACKAGE_PIN G1 IOSTANDARD LVCMOS33} [get_ports led]

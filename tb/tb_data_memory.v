@@ -10,20 +10,29 @@ module tb_data_memory;
         .addr(addr),.write_data(wd),.funct3(f3),.read_data(rd)
     );
     always #5 clk=~clk;
+
+    task check_read(input [2:0] funct3, input [31:0] expected);
+        begin
+            @(negedge clk);
+            mw = 0;
+            mr = 1;
+            f3 = funct3;
+            @(posedge clk); #1;
+            if (rd !== expected) begin
+                $display("funct3=%b got=%h expected=%h", funct3, rd, expected);
+                err = err + 1;
+            end
+        end
+    endtask
+
     initial begin
-        clk=0; mr=0; mw=0; addr=0; wd=0; f3=0;
-        addr=32'd4; wd=32'h89ab_cdef; f3=3'b010; mw=1;
-        @(posedge clk); #1;
-        mw=0; mr=1; #1;
-        if(rd!==32'h89ab_cdef) err=err+1;
-        f3=3'b000; #1;
-        if(rd!==32'hffff_ffef) err=err+1;
-        f3=3'b100; #1;
-        if(rd!==32'h0000_00ef) err=err+1;
-        f3=3'b001; #1;
-        if(rd!==32'hffff_cdef) err=err+1;
-        f3=3'b101; #1;
-        if(rd!==32'h0000_cdef) err=err+1;
+        clk=0; mr=0; mw=1; addr=32'd4; wd=32'h89ab_cdef; f3=3'b010;
+        // The first rising edge writes the word. Reads start on the next cycle.
+        check_read(3'b010, 32'h89ab_cdef); // LW
+        check_read(3'b000, 32'hffff_ffef); // LB
+        check_read(3'b100, 32'h0000_00ef); // LBU
+        check_read(3'b001, 32'hffff_cdef); // LH
+        check_read(3'b101, 32'h0000_cdef); // LHU
         if(err==0)
             $display("pass tb_data_memory");
         else

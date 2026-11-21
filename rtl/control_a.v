@@ -12,7 +12,8 @@ module control_a(
     output reg alu_src,
     output reg reg_write
 );
-    always@(*) begin
+    // Start with writes disabled, then set the controls for this opcode.
+    always @(*) begin
         branch = 1'b0;
         jump = 1'b0;
         jalr = 1'b0;

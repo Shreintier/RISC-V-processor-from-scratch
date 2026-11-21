@@ -9,7 +9,8 @@ module forwarding_unit(
     output reg [1:0] forward_a,
     output reg [1:0] forward_b
 );
-    always@(*) begin
+    // Use the newest matching result: check MEM before WB.
+    always @(*) begin
         if(ex_mem_reg_write && (ex_mem_rd != 5'd0) && (ex_mem_rd == id_ex_rs1))
             forward_a = 2'b10;
         else if(mem_wb_reg_write && (mem_wb_rd != 5'd0) && (mem_wb_rd == id_ex_rs1))
